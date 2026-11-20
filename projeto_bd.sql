@@ -6,11 +6,10 @@
 -- -> Email do comércio
 
 CREATE TABLE "Comercio" (
-	id int NOT NULL,
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	apikey_crypt varchar(255) NOT NULL,
 	nome_comercio varchar(255) NOT NULL,
-	email varchar(255) NOT NULL,
-	PRIMARY KEY(id)
+	email varchar(255) NOT NULL
 );
 
 -- O que está vendendo?
@@ -22,11 +21,10 @@ CREATE TABLE "Comercio" (
 -- -> Moeda que foi feita a compra
 
 CREATE TABLE "Produto" (
-	id int NOT NULL,
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	id_comercio int NOT NULL,
 	nome_item varchar(255) NOT NULL,
 	preco real NOT NULL,
-	PRIMARY KEY(id),
 	FOREIGN KEY(id_comercio) REFERENCES Comercio(id)
 );
 
@@ -36,11 +34,10 @@ CREATE TABLE "Produto" (
 -- -> Email do usuário 
 
 CREATE TABLE Usuario (
-	id int NOT NULL,
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	nome_usuario varchar(255) NOT NULL,
 	email varchar(255) NOT NULL,
-	senha_crypt varchar(25) NOT NULL,
-	PRIMARY KEY(id)
+	senha_crypt varchar(25) NOT NULL
 );
 
 -- Como está vendendo?
@@ -52,13 +49,12 @@ CREATE TABLE Usuario (
 -- -> Status da compra
 
 CREATE TABLE Venda (
-	id int NOT NULL,
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	id_comercio int NOT NULL,
 	id_item int NOT NULL,
 	id_cliente int,
 	hora_compra datetime,
 	status varchar(10) NOT NULL,
-	PRIMARY KEY(id),
 	FOREIGN KEY(id_comercio) REFERENCES Comercio(id),
 	FOREIGN KEY(id_item) REFERENCES Produto(id),
 	FOREIGN KEY(id_cliente) REFERENCES Usuario(id)
