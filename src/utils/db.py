@@ -1,7 +1,7 @@
 import os
 
-from dotenv import load_dotenv, dotenv_values
-from sqlalchemy import Engine, create_engine, text
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
 
 load_dotenv()
 
