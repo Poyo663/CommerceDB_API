@@ -5,9 +5,10 @@ from pydantic import BaseModel
 from sqlalchemy import Connection, text
 
 from ..utils.db import connection_established
+from ..utils.hash import hash
 
 class Produto(BaseModel):
-    id: int | None
+    id: int | None = None
     nome: str
     preco: float
 
@@ -27,7 +28,7 @@ class ProdutoTableModel():
                     ON c.id = p.id_comercio
                     WHERE c.apikey_crypt = :key
                     """
-                    ), { "key": api_key }
+                    ), { "key": hash(api_key) }
         ).all()
         res = []
         for p in something:
@@ -43,7 +44,7 @@ class ProdutoTableModel():
         rows = conn.execute(
                 text(
                     "SELECT id FROM Comercio WHERE apikey_crypt = :key"
-                    ), { "key": self.api_key }
+                    ), { "key": hash(self.api_key) }
         ).all()
         if len(rows) < 1:
             raise HTTPException(status_code=404, detail="Could not find your comercio")
@@ -63,5 +64,4 @@ class ProdutoTableModel():
                     ), prodObjs
         )
         conn.commit()
-        print(self.produtos)
         return self.produtos
