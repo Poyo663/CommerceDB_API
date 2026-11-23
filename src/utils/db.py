@@ -1,13 +1,13 @@
 import os
 
-from dotenv import load_dotenv, dotenv_values
-from sqlalchemy import Engine, create_engine, text
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
 
 load_dotenv()
 
 def connection_established(func):
     def res(self, *args, **kwargs):
-        func(self, create_db_engine().connect(), *args, **kwargs)
+        return func(self, create_db_engine().connect(), *args, **kwargs)
     return res
 
 def create_db_engine():

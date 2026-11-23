@@ -7,6 +7,7 @@ from sqlalchemy import Connection, text
 from ..utils.db import connection_established
 
 class Produto(BaseModel):
+    id: int | None
     nome: str
     preco: float
 
@@ -15,6 +16,24 @@ class ProdutoRequestModel(BaseModel):
     produtos: list[Produto]
 
 class ProdutoTableModel():
+    @staticmethod
+    @connection_established
+    def fetch_all(api_key: str, conn: Connection) -> list[Produto]:
+        something = conn.execute(
+                text(
+                    """
+                    SELECT p.id, p.nome_item, p.preco FROM
+                    Comercio as c INNER JOIN Produto as p
+                    ON c.id = p.id_comercio
+                    WHERE c.apikey_crypt = :key
+                    """
+                    ), { "key": api_key }
+        ).all()
+        res = []
+        for p in something:
+            res.append(Produto(id=p[0], nome=p[1], preco=p[2]))
+        return res
+
     def __init__(self, produto: ProdutoRequestModel) -> None:
         self.api_key = produto.api_key
         self.produtos = produto.produtos
