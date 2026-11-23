@@ -37,7 +37,7 @@ CREATE TABLE Usuario (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	nome_usuario varchar(255) NOT NULL,
 	email varchar(255) NOT NULL,
-	senha_crypt varchar(25) NOT NULL
+	senha_crypt varchar(255) NOT NULL
 );
 
 -- Como está vendendo?
