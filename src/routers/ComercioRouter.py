@@ -9,7 +9,7 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     response_model=str,
     summary='Receba uma chave de API para o seu comércio',
-    tags=['Comercio', 'Commerce'],
+    tags=['Comercio'],
     responses={
         201: {
             'description': 'Uma nova chave API',
