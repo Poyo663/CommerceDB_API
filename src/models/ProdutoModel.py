@@ -28,9 +28,14 @@ class ProdutoRequestModel(BaseModel):
             min_length=10,
             max_length=255,
             description='Chave de API fornecida pela API',
-            examples=[]
+            examples=['inv_admin_dLLvsZHFILBQ3IoD23_Y5R1nQZ41LEI9f-bvVBdJtf0']
         )
-    produtos: list[Produto]
+    produtos: list[Produto] = Field(
+            ...,
+            min_length=0,
+            description='Lista de produtos a se adicionar',
+            examples=[[{ 'nome': 'Pastel de frango com catupiry', 'preco': 9.99 }, { 'nome': 'Parafuso pequeno', 'preco': 5}]]
+        )
 
 class ProdutoTableModel():
     @staticmethod
