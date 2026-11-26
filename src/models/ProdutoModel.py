@@ -1,19 +1,35 @@
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import Connection, text
 
 from ..utils.db import connection_established
 from ..utils.hash import hash
 
 class Produto(BaseModel):
-    id: int | None = None
-    nome: str
-    preco: float
+    nome: str = Field(
+            ...,
+            min_length=2,
+            max_length=255,
+            description='Nome do produto',
+            examples=['Pastel de frango com catupiry', 'Parafuso pequeno']
+        )
+    preco: float = Field(
+            ...,
+            gt=0,
+            description='Preço do produto',
+            examples=[9.99, 5]
+        )
 
 class ProdutoRequestModel(BaseModel):
-    api_key: str
+    api_key: str = Field(
+            ...,
+            min_length=10,
+            max_length=255,
+            description='Chave de API fornecida pela API',
+            examples=[]
+        )
     produtos: list[Produto]
 
 class ProdutoTableModel():
