@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import ComercioRouter, ProdutoRouter, UsuarioRouter
+from .routers import ComercioRouter, ProdutoRouter, UsuarioRouter, VendaRouter
 
 app = FastAPI()
 
@@ -16,6 +16,7 @@ app.add_middleware(
 app.include_router(ComercioRouter.router, prefix="/comercio")
 app.include_router(ProdutoRouter.router, prefix="/produto")
 app.include_router(UsuarioRouter.router, prefix="/usuario")
+app.include_router(VendaRouter.router, prefix="/venda")
 
 @app.get('/')
 def hello_world():

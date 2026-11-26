@@ -14,6 +14,17 @@ class ComercioTableModel():
         self.email = comercio.email
         self.apikey = generate_api_key()
 
+    @staticmethod
+    @connection_established
+    def get_id(apiKey: str, conn: Connection) -> int:
+        apiKey = hash(apiKey)
+        print(apiKey)
+        result = conn.execute(text("""
+                  SELECT id FROM Comercio
+                  WHERE apikey_crypt = :key
+          """), { "key": apiKey }).all()
+        return result[0][0]
+
     @connection_established
     def build(self, conn: Connection):
         conn.execute(text(
