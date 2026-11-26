@@ -1,12 +1,24 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import Connection, text
 
 from ..utils.db import connection_established
 from ..utils.hash import generate_api_key, hash
 
 class ComercioRequestModel(BaseModel):
-    name: str 
-    email: str
+    name: str = Field(
+            ...,
+            min_length=3,
+            max_digits=255,
+            description='Nome do seu comércio',
+            examples=['Ronaldo Lanches', 'Lojas Americanas']
+        )
+    email: str = Field(
+            ...,
+            min_length=5,
+            max_digits=255,
+            description='Email profissional do seu comércio',
+            examples=['ronaldolanches123@gmail.com', 'lojasamericanas@gmail.com']
+        )
 
 class ComercioTableModel():
     def __init__(self, comercio: ComercioRequestModel):
