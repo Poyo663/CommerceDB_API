@@ -23,9 +23,24 @@ class VendaStatus(str, Enum):
     DELIVERED =  'Entregue'
 
 class VendaRequestModel(BaseModel):
-    comercio_apikey: str
-    id_item: int
-    id_cliente: int | None = None
+    comercio_apikey: str = Field(
+            ...,
+            min_length=10,
+            max_length=255,
+            description='Chave de API fornecida pela API',
+            examples=['inv_admin_dLLvsZHFILBQ3IoD23_Y5R1nQZ41LEI9f-bvVBdJtf0']
+        )
+
+    id_item: int = Field(
+            ...,
+            description='Id do item a ser adicionado',
+            examples=[14, 20, 530]
+        )
+    id_cliente: int | None = Field(
+            default=None,
+            description='Id do cliente que fez a compra',
+            examples=[12345, 54682, 981247]
+        )
     status: VendaStatus = Field(default=VendaStatus.PENDING)
 
 class VendaTableModel():
@@ -42,4 +57,4 @@ class VendaTableModel():
             "INSERT INTO Venda (id_comercio, id_item, id_cliente, hora_compra, status) VALUES (:id_comercio, :id_item, :id_cliente, :hora_compra, :status)"),
                      {"id_comercio": self.id_comercio, "id_item": self.id_item, "id_cliente": self.id_cliente, "hora_compra": self.hora_compra, "status": self.status })
         conn.commit()
-        pass
+        return VendaRequestModel(id_item=self.id_item, id_cliente=self.id_cliente, status=self.status)
