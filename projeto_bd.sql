@@ -6,11 +6,13 @@
 -- -> Email do comércio
 
 CREATE TABLE "Comercio" (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
-	apikey_crypt varchar(255) NOT NULL,
-	nome_comercio varchar(255) NOT NULL,
-	email varchar(255) NOT NULL
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    apikey_crypt varchar(255) NOT NULL,
+    nome_comercio varchar(255) NOT NULL,
+    email varchar(255) NOT NULL,
+    ativo INTEGER NOT NULL DEFAULT 1 CHECK (ativo IN (0, 1))
 );
+
 
 -- O que está vendendo?
 -- Item
@@ -58,4 +60,16 @@ CREATE TABLE Venda (
 	FOREIGN KEY(id_comercio) REFERENCES Comercio(id),
 	FOREIGN KEY(id_item) REFERENCES Produto(id),
 	FOREIGN KEY(id_cliente) REFERENCES Usuario(id)
+);
+
+-- Solicitações de exclusão de comércio
+
+CREATE TABLE SolicitacaoExclusao (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_comercio INTEGER NOT NULL,
+    token_hash VARCHAR(255) NOT NULL UNIQUE,
+    data_expiracao DATETIME NOT NULL,
+    utilizado INTEGER NOT NULL DEFAULT 0
+        CHECK (utilizado IN (0, 1)),
+    FOREIGN KEY (id_comercio) REFERENCES Comercio(id)
 );

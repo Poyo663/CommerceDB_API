@@ -1,6 +1,17 @@
-from fastapi import APIRouter, status
+import logging
 
-from ..models.ComercioModel import ComercioRequestModel, ComercioTableModel
+from fastapi import APIRouter, HTTPException, status
+
+from ..models.ComercioModel import (
+    ComercioRequestModel,
+    ComercioTableModel,
+    ExclusaoRequestModel,
+    ExclusaoConfirmModel
+)
+
+from ..utils.email import enviar_email_exclusao
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -26,3 +37,46 @@ def create_comercio(com_data: ComercioRequestModel) -> str:
     obj = ComercioTableModel(com_data)
     apikey = obj.build()
     return apikey
+
+
+@router.post(
+    "/unsubscribe/request",
+    status_code=status.HTTP_200_OK,
+    summary="Solicitar exclusão do comércio",
+    tags=["Comercio"]
+)
+def solicitar_exclusao(dados: ExclusaoRequestModel):
+
+    email, token = ComercioTableModel.solicitar_exclusao(
+        dados.api_key
+    )
+
+    try:
+        enviar_email_exclusao(email, token)
+
+    except Exception:
+        logger.error(
+            "Falha no serviço de envio de confirmação"
+        )
+
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Não foi possível enviar a confirmação"
+        )
+
+    return {
+        "message": "Solicitação de exclusão registrada"
+    }
+
+
+@router.post(
+    "/unsubscribe/confirm",
+    status_code=status.HTTP_200_OK,
+    summary="Confirmar exclusão do comércio",
+    tags=["Comercio"]
+)
+def confirmar_exclusao(dados: ExclusaoConfirmModel):
+
+    return ComercioTableModel.confirmar_exclusao(
+        dados.token
+    )

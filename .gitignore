@@ -1,2 +1,6 @@
 ./db
 .env
+
+# Arquivos temporários do Python
+__pycache__/
+*.py[cod]
